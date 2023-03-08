@@ -3,13 +3,9 @@ import {
   Item,
   SourceOptions,
 } from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
-import { Denops } from "https://deno.land/x/ddu_vim@v2.3.0/deps.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.3.0/deps.ts";
 import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.3.2/file.ts";
-import {
-  join,
-  relative,
-  resolve,
-} from "https://deno.land/std@0.177.0/path/mod.ts";
+import { join, resolve } from "https://deno.land/std@0.177.0/path/mod.ts";
 import { abortable } from "https://deno.land/std@0.171.0/async/mod.ts";
 
 type Params = {
@@ -48,6 +44,29 @@ export class Source extends BaseSource<Params> {
             await response.text(),
             new RegExp(regexpStr, "g"),
           );
+          for (const url of urls) {
+            items.push({
+              word: url,
+              action: {
+                path: url,
+                text: url,
+              },
+            });
+          }
+        } else if (
+          (await Deno.stat(
+            await Deno.realPath(
+              (await fn.getcwd(args.denops)) + "/" + args.sourceParams.src,
+            ),
+          )).isFile
+        ) {
+          console.log("file");
+          const raw = await Deno.readTextFile(
+            await Deno.realPath(
+              (await fn.getcwd(args.denops)) + "/" + args.sourceParams.src,
+            ),
+          );
+          const urls = getUrls(raw, new RegExp(regexpStr, "g"));
           for (const url of urls) {
             items.push({
               word: url,
@@ -126,7 +145,7 @@ async function* walkLocal(
           const urls = getUrls(raw, regexp);
           for (const url of urls) {
             const n = chunk.push({
-              word: relative(root, abspath) + ":" + url,
+              word: url,
               action: {
                 path: url,
                 text: url,
