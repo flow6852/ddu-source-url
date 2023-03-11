@@ -60,7 +60,6 @@ export class Source extends BaseSource<Params> {
             ),
           )).isFile
         ) {
-          console.log("file");
           const raw = await Deno.readTextFile(
             await Deno.realPath(
               (await fn.getcwd(args.denops)) + "/" + args.sourceParams.src,
