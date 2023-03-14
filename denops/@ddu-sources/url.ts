@@ -4,7 +4,6 @@ import {
   SourceOptions,
 } from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
 import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.3.0/deps.ts";
-import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.3.2/file.ts";
 import { join, resolve } from "https://deno.land/std@0.177.0/path/mod.ts";
 import { abortable } from "https://deno.land/std@0.171.0/async/mod.ts";
 
@@ -16,17 +15,16 @@ type Params = {
 };
 
 export class Source extends BaseSource<Params> {
-  override kind = "file";
-
+  override kind = 'url';
   override gather(args: {
     denops: Denops;
     sourceOptions: SourceOptions;
     sourceParams: Params;
-  }): ReadableStream<Item<ActionData>[]> {
-    return new ReadableStream<Item<ActionData>[]>({
+  }): ReadableStream<Item[]> {
+    return new ReadableStream<Item[]>({
       async start(controller) {
         // initialize
-        let items: Item<ActionData>[] = [];
+        let items: Item[] = [];
         const abortController = new AbortController();
 
         // select src
@@ -50,6 +48,7 @@ export class Source extends BaseSource<Params> {
               action: {
                 path: url,
                 text: url,
+                url: url
               },
             });
           }
@@ -72,6 +71,7 @@ export class Source extends BaseSource<Params> {
               action: {
                 path: url,
                 text: url,
+                url: url
               },
             });
           }
@@ -128,11 +128,11 @@ async function* walkLocal(
   chunkSize: number,
   expandSymbolicLink: boolean,
   regexp: RegExp,
-): AsyncGenerator<Item<ActionData>[]> {
+): AsyncGenerator<Item[]> {
   const walkLocal = async function* (
     dir: string,
-  ): AsyncGenerator<Item<ActionData>[]> {
-    let chunk: Item<ActionData>[] = [];
+  ):AsyncGenerator<Item[]> {
+    let chunk: Item[] = [];
     try {
       for await (const entry of abortable(Deno.readDir(dir), signal)) {
         const abspath = join(dir, entry.name);
@@ -148,6 +148,7 @@ async function* walkLocal(
               action: {
                 path: url,
                 text: url,
+                url: url,
               },
             });
             if (n >= chunkSize) {
@@ -173,7 +174,6 @@ async function* walkLocal(
     } catch (e: unknown) {
       if (e instanceof Deno.errors.PermissionDenied) {
         // Ignore this error
-        // See https://github.com/Shougo/ddu-source-file_rec/issues/2
         return;
       }
       throw e;
