@@ -14,7 +14,7 @@ https://github.com/Shougo/ddu.vim
 
 ## ddu-kind-file
 
-https://github.com/Shougo/ddu-kind-file
+https://github.com/4513ECHO/ddu-kind-url
 
 # Example
 
