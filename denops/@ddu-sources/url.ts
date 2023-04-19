@@ -2,10 +2,10 @@ import {
   BaseSource,
   Item,
   SourceOptions,
-} from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
+} from "https://deno.land/x/ddu_vim@v2.8.3/types.ts";
 import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.3.0/deps.ts";
-import { join, resolve } from "https://deno.land/std@0.177.0/path/mod.ts";
-import { abortable } from "https://deno.land/std@0.171.0/async/mod.ts";
+import { join, resolve } from "https://deno.land/std@0.184.0/path/mod.ts";
+import { abortable } from "https://deno.land/std@0.184.0/async/mod.ts";
 
 type Params = {
   src: string;
