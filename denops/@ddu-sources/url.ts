@@ -15,7 +15,7 @@ type Params = {
 };
 
 export class Source extends BaseSource<Params> {
-  override kind = 'url';
+  override kind = "url";
   override gather(args: {
     denops: Denops;
     sourceOptions: SourceOptions;
@@ -48,7 +48,7 @@ export class Source extends BaseSource<Params> {
               action: {
                 path: url,
                 text: url,
-                url: url
+                url: url,
               },
             });
           }
@@ -71,7 +71,7 @@ export class Source extends BaseSource<Params> {
               action: {
                 path: url,
                 text: url,
-                url: url
+                url: url,
               },
             });
           }
@@ -131,7 +131,7 @@ async function* walkLocal(
 ): AsyncGenerator<Item[]> {
   const walkLocal = async function* (
     dir: string,
-  ):AsyncGenerator<Item[]> {
+  ): AsyncGenerator<Item[]> {
     let chunk: Item[] = [];
     try {
       for await (const entry of abortable(Deno.readDir(dir), signal)) {
